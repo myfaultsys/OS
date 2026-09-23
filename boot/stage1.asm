@@ -15,16 +15,17 @@ mov si, MSG_STAGE1_GREETING
 call print_16
 
 disk_reset:
-	mov ah, BIOS_DISK_READ_SERVICE
+	mov ah, BIOS_DISK_RESET_SERVICE
 	int BIOS_INTERRUPT_DISK_ACCESS
 	jc disk_reset
 
-mov si, MSG_DISK_RESET_SUCESS
-call print_16
+	mov si, MSG_DISK_RESET_SUCESS
+	call print_16
 
-mov si, MSG_STAGE2_LOAD
-call print_16
+	mov si, MSG_STAGE2_LOAD
+	call print_16
 
+	hlt
 load_second_stage:
 	mov ah, BIOS_DISK_READ_SERVICE
 	mov al, STAGE2_SECTOR_COUNT
@@ -39,7 +40,6 @@ second_stage_begin:
 	jmp 0x0000:STAGE2_ADDRESS
 
 print_16:
-	call waiting
 .handle_character:
 	lodsb
 	test al, al
@@ -51,9 +51,9 @@ print_16:
 	ret
 
 waiting:
-	mov cx, 0x0fff
+	mov cx, 0x00ff
 .loop_1:
-	mov dx, 0x2fff
+	mov dx, 0x0fff
 .loop_2:
 	dec dx
 	jnz .loop_2
@@ -61,9 +61,9 @@ waiting:
 	jnz .loop_1
 	ret
 
-MSG_STAGE1_GREETING: db 	"STAGE 1 BOOTLOADER STARTED!", 0
-MSG_DISK_RESET_SUCESS: db 	"DISK SYSTEM RESET SUCCESS!", 0
-MSG_STAGE2_LOAD: db 		"LOADING STAGE 2!", 0
+MSG_STAGE1_GREETING: db 	"STAGE 1 BOOTLOADER STARTED!", NEWLINE, 0
+MSG_DISK_RESET_SUCESS: db 	"DISK SYSTEM RESET SUCCESS!", NEWLINE, 0
+MSG_STAGE2_LOAD: db 		"LOADING STAGE 2!", NEWLINE, 0
 
 BOOT_DRIVE: db 0
 

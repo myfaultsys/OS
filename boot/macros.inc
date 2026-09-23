@@ -19,3 +19,6 @@
 %define KERNEL_HEAD			          0X00
 %define KERNEL_TARGET_SECTOR		  0x03
 %define KERNEL_ADDRESS			      0x100000
+
+%define NEWLINE                     0x0d, 0x0a
+%define BACKSPACE                   0x08
