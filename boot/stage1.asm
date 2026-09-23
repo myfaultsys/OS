@@ -39,18 +39,18 @@ second_stage_begin:
 	jmp 0x0000:STAGE2_ADDRESS
 
 print_16:
-	call wait
+	call waiting
 .handle_character:
 	lodsb
 	test al, al
-	jz string_ended
+	jz .string_ended
 	mov ah, BIOS_TELETYPE_OUTPUT_FUNCTION
 	int BIOS_INTERRUPT_VIDEO_SERVICE
 	jmp .handle_character
 .string_ended:
 	ret
 
-wait:
+waiting:
 	mov cx, 0x0fff
 .loop_1:
 	mov dx, 0x2fff
