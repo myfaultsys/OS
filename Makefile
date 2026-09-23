@@ -16,5 +16,7 @@ OS.img: build/stage1.bin | builddir
 	cat $^ > $@
 run: OS.img
 	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a
+debug: OS.img
+	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a -s -S
 clean:
 	@rm -rf build/* OS.img

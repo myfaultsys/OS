@@ -3,7 +3,7 @@
 
 %include "boot/macros.inc"
 
-entry_stage1:
+entry_stage_one:
 	xor ax, ax
 	mov ds, ax
 	mov es, ax
@@ -19,13 +19,12 @@ disk_reset:
 	int BIOS_INTERRUPT_DISK_ACCESS
 	jc disk_reset
 
-	mov si, MSG_DISK_RESET_SUCESS
-	call print_16
+mov si, MSG_DISK_RESET_SUCESS
+call print_16
 
-	mov si, MSG_STAGE2_LOAD
-	call print_16
+mov si, MSG_STAGE2_LOAD
+call print_16
 
-	hlt
 load_second_stage:
 	mov ah, BIOS_DISK_READ_SERVICE
 	mov al, STAGE2_SECTOR_COUNT
@@ -40,6 +39,7 @@ second_stage_begin:
 	jmp 0x0000:STAGE2_ADDRESS
 
 print_16:
+	call waiting
 .handle_character:
 	lodsb
 	test al, al
@@ -51,15 +51,20 @@ print_16:
 	ret
 
 waiting:
-	mov cx, 0x00ff
+	mov cx, 0x0fff
 .loop_1:
-	mov dx, 0x0fff
+	mov dx, 0xffff
 .loop_2:
 	dec dx
 	jnz .loop_2
 	dec cx
 	jnz .loop_1
 	ret
+
+halt:
+	cli
+	hlt
+	jmp halt
 
 MSG_STAGE1_GREETING: db 	"STAGE 1 BOOTLOADER STARTED!", NEWLINE, 0
 MSG_DISK_RESET_SUCESS: db 	"DISK SYSTEM RESET SUCCESS!", NEWLINE, 0
