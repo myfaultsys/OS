@@ -17,6 +17,7 @@ call print_16
 
 disk_reset:
 	mov ah, BIOS_DISK_RESET_SERVICE
+	;mov dl, 10000000b
 	int BIOS_INTERRUPT_DISK_ACCESS
 	jc disk_reset
 
@@ -37,10 +38,10 @@ load_second_stage:
 	jc load_second_stage
 
 second_stage_begin:
-	jmp 0x0000:STAGE2_ADDRESS
+	mov dl, [BOOT_DRIVE]
+	jmp STAGE2_ADDRESS
 
 print_16:
-	call waiting
 .handle_character:
 	lodsb
 	test al, al
@@ -73,5 +74,5 @@ MSG_STAGE2_LOAD: db 		"LOADING STAGE 2!", NEWLINE, 0
 
 BOOT_DRIVE: db 0
 
-times 510 - ($-$$) db 0
+times 510 - ($-$$) db 1
 dw 0xaa55

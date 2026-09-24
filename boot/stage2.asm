@@ -3,11 +3,14 @@
 
 %include "boot/macros.inc"
 
-extern _entry
+extern _kernel_entry
 
 entry_stage_two:
+    cli
     xor ax, ax
     mov ds, ax
+
+    mov [BOOT_DRIVE], dl
 
     call A20_enable
     call load_kernel
@@ -18,13 +21,14 @@ entry_stage_two:
 
 [bits 32]
 protected_mode:
+    cli
     mov ax, GDT_data_segment_offset
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    mov esp, 0x9000
+    mov esp, 0x90000
     cld
 
     call clear_screen
@@ -32,17 +36,33 @@ protected_mode:
     mov edi, FRAME_BUFFER_ADDRESS
     call print_32
 
-    call halt
+    ;call halt
     call relocate_kernel
 
+    jmp GDT_code_segment_offset:KERNEL_ADDRESS
+
+    call halt
+
 A20_enable:
+    push ax
+    xor ax, ax
     in al, FAST_A20_GATE_REGISTER
     or al, 0x02
     out FAST_A20_GATE_REGISTER, al
+    pop ax
     ret
 
 load_kernel:
+    ;push word KERNEL_REALMODE_ADDRESS
+    ;pop ax
+    ;mov ah, BIOS_DISK_RESET_SERVICE
+    ;int BIOS_INTERRUPT_DISK_ACCESS
+    ;jc load_kernel
+    ;push 3
+    ;push 4
+    xor ax, ax
     mov ax, KERNEL_REALMODE_ADDRESS
+    mov ax, 0x1000
     mov es, ax
     xor bx, bx
     mov ah, BIOS_DISK_READ_SERVICE
@@ -50,20 +70,32 @@ load_kernel:
     mov ch, KERNEL_CYLINDER
     mov dh, KERNEL_HEAD
     mov cl, KERNEL_TARGET_SECTOR
+    ;mov dl, [BOOT_DRIVE]
     int BIOS_INTERRUPT_DISK_ACCESS
     jc load_kernel
     ret
 
+fail:
+    ;call clear_screen
+    mov al, ah
+    add al, '0'
+    mov ah, 0x0e
+    int 0x10
+    hlt
+    jmp $
+
 enable_hardware_protection:
+    push eax
     mov eax, cr0
-    or eax, 0x1
+    or eax, 0x01
     mov cr0, eax
+    pop eax
     ret
 
 relocate_kernel:
-    mov esi, KERNEL_REALMODE_ADDRESS
+    mov esi, 0x10000
     mov edi, KERNEL_ADDRESS
-    mov ecx, KERNEL_SIZE_IN_BYTES   ; immediate value required here
+    mov ecx, KERNEL_SIZE_IN_BYTES
     rep movsb
     ret
 
@@ -77,12 +109,12 @@ GDT_code_descriptor:
     db 11001111b
     db 0x0
 GDT_data_descriptor:
-    dw  0xffff
-    dw  0x0
-    db  0x0
-    db  10010010b
-    db  11001111b
-    db  0x0
+    dw 0xffff
+    dw 0x0
+    db 0x0
+    db 10010010b
+    db 11001111b
+    db 0x0
 GDT_end:
 
 GDT_descriptor:
@@ -93,6 +125,7 @@ GDT_code_segment_offset equ GDT_code_descriptor - GDT_start
 GDT_data_segment_offset equ GDT_data_descriptor - GDT_start
 
 halt:
+    cli
     hlt
     jmp halt
 
@@ -102,7 +135,7 @@ print_32:
     mov al, 0x0f
     out dx, al
     mov dx, 0x3d5
-    mov al, 34
+    mov al, 26
     out dx, al
     mov dx, 0x3d4
     mov al, 0x0e
@@ -136,6 +169,7 @@ clear_screen:
     rep stosw
     ret
 
+BOOT_DRIVE: db 0
 MSG32_GREETING: db "CPU ENTERED PROTECTED MODE!", 0
 
-times 511 - ($-$$) db 0
+times 512 - ($-$$) db 2
