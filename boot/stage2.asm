@@ -48,8 +48,8 @@ protected_mode:
     mov gs, ax
     mov ss, ax
     mov esp, 0x90000
-    cld
 
+    cld
     call clear_screen
 
     mov esi, MSG32_GREETING
@@ -197,7 +197,7 @@ waiting:
     push dword 0xffff
     pop ecx
 .loop_1:
-    push dword 0x0fff
+    push dword 0x02ff
     pop edx
 .loop_2:
     dec edx
@@ -207,14 +207,11 @@ waiting:
     ret
 
 BOOT_DRIVE: db 0
+
 MSG32_GREETING: db "CPU ENTERED PROTECTED MODE!", 0
-
 MSG16_A20: db "ENABLED A20 LINE!", NEWLINE, 0
-
 MSG16_KERNEL_LOADED: db "KERNEL LOADED INTO RAM!", NEWLINE, 0
-
 MSG16_GDT_LOADED: db "GLOBAL DESCRIPTOR TABLE LOADED!", NEWLINE, 0
-
 MSG16_PROTECTED_MODE_JUMP: db "JUMPING INTO 32-BIT PROTECTED MODE!", NEWLINE, 0
 
 times 512 - ($-$$) db 0
