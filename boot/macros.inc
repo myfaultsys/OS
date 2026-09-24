@@ -18,7 +18,12 @@
 %define KERNEL_CYLINDER			      0x00
 %define KERNEL_HEAD			          0X00
 %define KERNEL_TARGET_SECTOR		  0x03
+%define KERNEL_REALMODE_ADDRESS       0x1000
 %define KERNEL_ADDRESS			      0x100000
+%define KERNEL_SIZE_IN_BYTES          5120
 
 %define NEWLINE                     0x0d, 0x0a
 %define BACKSPACE                   0x08
+
+%define FAST_A20_GATE_REGISTER      0x92
+%define FRAME_BUFFER_ADDRESS        0xb8000

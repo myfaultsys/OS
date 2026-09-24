@@ -12,7 +12,9 @@ builddir:
 	@mkdir -p build
 build/stage1.bin: boot/stage1.asm | builddir
 	$(ASM) $(ASMFLAGS) $< -o $@
-OS.img: build/stage1.bin | builddir
+build/stage2.bin: boot/stage2.asm | builddir
+	$(ASM) $(ASMFLAGS) $< -o $@
+OS.img: build/stage1.bin build/stage2.bin | builddir
 	cat $^ > $@
 run: OS.img
 	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a

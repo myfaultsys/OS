@@ -4,6 +4,7 @@
 %include "boot/macros.inc"
 
 entry_stage_one:
+	cli
 	xor ax, ax
 	mov ds, ax
 	mov es, ax
@@ -53,7 +54,7 @@ print_16:
 waiting:
 	mov cx, 0x0fff
 .loop_1:
-	mov dx, 0xffff
+	mov dx, 0x00ff
 .loop_2:
 	dec dx
 	jnz .loop_2
