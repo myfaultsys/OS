@@ -20,10 +20,13 @@
 %define KERNEL_TARGET_SECTOR		  0x03
 %define KERNEL_REALMODE_ADDRESS       0x1000
 %define KERNEL_ADDRESS			      0x100000
-%define KERNEL_SIZE_IN_BYTES          132
+%define KERNEL_SIZE_IN_BYTES          512
 
 %define NEWLINE                     0x0d, 0x0a
 %define BACKSPACE                   0x08
 
 %define FAST_A20_GATE_REGISTER      0x92
 %define FRAME_BUFFER_ADDRESS        0xb8000
+
+%define VGA_WIDTH                   80
+%define VGA_HEIGHT                  25

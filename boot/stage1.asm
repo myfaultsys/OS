@@ -12,20 +12,25 @@ entry_stage_one:
 	mov sp, BOOTLOADER_ENTRY
 	mov [BOOT_DRIVE], dl
 
-mov si, MSG_STAGE1_GREETING
-call print_16
+	call clear_screen
+	call waiting
+	mov si, MSG_STAGE1_GREETING
+	call print_16
+	call waiting
 
 disk_reset:
 	mov ah, BIOS_DISK_RESET_SERVICE
-	;mov dl, 10000000b
 	int BIOS_INTERRUPT_DISK_ACCESS
 	jc disk_reset
 
-mov si, MSG_DISK_RESET_SUCESS
-call print_16
+	call waiting
+	mov si, MSG_DISK_RESET_SUCESS
+	call print_16
+	call waiting
 
-mov si, MSG_STAGE2_LOAD
-call print_16
+	mov si, MSG_STAGE2_LOAD
+	call print_16
+	call waiting
 
 load_second_stage:
 	mov ah, BIOS_DISK_READ_SERVICE
@@ -36,6 +41,14 @@ load_second_stage:
 	mov bx, STAGE2_ADDRESS
 	int BIOS_INTERRUPT_DISK_ACCESS
 	jc load_second_stage
+
+	mov si, MSG_STAGE2_IN_RAM
+	call print_16
+	call waiting
+
+	mov si, MSG_STAGE2_JUMP
+	call print_16
+	call waiting
 
 second_stage_begin:
 	mov dl, [BOOT_DRIVE]
@@ -53,9 +66,11 @@ print_16:
 	ret
 
 waiting:
-	mov cx, 0x0fff
+	push 0xffff
+	pop cx
 .loop_1:
-	mov dx, 0x00ff
+	push 0x04ff
+	pop dx
 .loop_2:
 	dec dx
 	jnz .loop_2
@@ -68,9 +83,28 @@ halt:
 	hlt
 	jmp halt
 
+clear_screen:
+	mov cx, 80*25
+.loop:
+	mov ah, 0x0e
+	mov al, ' '
+	mov bh, 0
+	mov bl, 0xbc
+	int 0x10
+	dec cx
+	jnz .loop
+.endloop:
+	ret
+
 MSG_STAGE1_GREETING: db 	"STAGE 1 BOOTLOADER STARTED!", NEWLINE, 0
+
 MSG_DISK_RESET_SUCESS: db 	"DISK SYSTEM RESET SUCCESS!", NEWLINE, 0
+
 MSG_STAGE2_LOAD: db 		"LOADING STAGE 2!", NEWLINE, 0
+
+MSG_STAGE2_IN_RAM: db "STAGE 2 SUCCESSFULLY LOADED INTO RAM!", NEWLINE, 0
+
+MSG_STAGE2_JUMP: db "JUMPING TO STAGE 2 BOOTLOADER...", NEWLINE, 0
 
 BOOT_DRIVE: db 0
 

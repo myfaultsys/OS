@@ -1,6 +1,12 @@
 # Prerequisites
 *.d
 
+# Binaries
+*.bin
+
+# Kate
+*.kate-swp
+
 # Object files
 *.o
 *.ko

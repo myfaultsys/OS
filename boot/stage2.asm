@@ -13,8 +13,27 @@ entry_stage_two:
     mov [BOOT_DRIVE], dl
 
     call A20_enable
+
+    mov si, MSG16_A20
+    call print_16
+    call waiting
+
     call load_kernel
+
+    mov si, MSG16_KERNEL_LOADED
+    call print_16
+    call waiting
+
     lgdt [GDT_descriptor]
+
+    mov si, MSG16_GDT_LOADED
+    call print_16
+    call waiting
+
+    mov si, MSG16_PROTECTED_MODE_JUMP
+    call print_16
+    call waiting
+
     call enable_hardware_protection
 
     jmp GDT_code_segment_offset:protected_mode
@@ -32,11 +51,14 @@ protected_mode:
     cld
 
     call clear_screen
+
     mov esi, MSG32_GREETING
     mov edi, FRAME_BUFFER_ADDRESS
     call print_32
 
-    ;call halt
+    call waiting
+    call waiting
+
     call relocate_kernel
 
     jmp GDT_code_segment_offset:KERNEL_ADDRESS
@@ -53,13 +75,6 @@ A20_enable:
     ret
 
 load_kernel:
-    ;push word KERNEL_REALMODE_ADDRESS
-    ;pop ax
-    ;mov ah, BIOS_DISK_RESET_SERVICE
-    ;int BIOS_INTERRUPT_DISK_ACCESS
-    ;jc load_kernel
-    ;push 3
-    ;push 4
     xor ax, ax
     mov ax, KERNEL_REALMODE_ADDRESS
     mov ax, 0x1000
@@ -76,11 +91,10 @@ load_kernel:
     ret
 
 fail:
-    ;call clear_screen
     mov al, ah
     add al, '0'
-    mov ah, 0x0e
-    int 0x10
+    mov ah, BIOS_TELETYPE_OUTPUT_FUNCTION
+    int BIOS_INTERRUPT_VIDEO_SERVICE
     hlt
     jmp $
 
@@ -162,14 +176,45 @@ print_32_blank_chars:
 .end_blank_chars:
     ret
 
+print_16:
+    lodsb
+    test al, al
+    jz .done
+    mov ah, BIOS_TELETYPE_OUTPUT_FUNCTION
+    int BIOS_INTERRUPT_VIDEO_SERVICE
+    jmp print_16
+.done:
+    ret
+
 clear_screen:
-    mov edi, 0xb8000
-    mov ecx, 80*25
+    mov edi, FRAME_BUFFER_ADDRESS
+    mov ecx, VGA_WIDTH * VGA_HEIGHT
     mov ax, 0x0f20
     rep stosw
+    ret
+
+waiting:
+    push dword 0xffff
+    pop ecx
+.loop_1:
+    push dword 0x0fff
+    pop edx
+.loop_2:
+    dec edx
+    jnz .loop_2
+    dec ecx
+    jnz .loop_1
     ret
 
 BOOT_DRIVE: db 0
 MSG32_GREETING: db "CPU ENTERED PROTECTED MODE!", 0
 
-times 512 - ($-$$) db 2
+MSG16_A20: db "ENABLED A20 LINE!", NEWLINE, 0
+
+MSG16_KERNEL_LOADED: db "KERNEL LOADED INTO RAM!", NEWLINE, 0
+
+MSG16_GDT_LOADED: db "GLOBAL DESCRIPTOR TABLE LOADED!", NEWLINE, 0
+
+MSG16_PROTECTED_MODE_JUMP: db "JUMPING INTO 32-BIT PROTECTED MODE!", NEWLINE, 0
+
+times 512 - ($-$$) db 0

@@ -18,7 +18,11 @@ build/kentry.o: kernel/kentry.asm | builddir
 	$(ASM) -f elf32 $< -o $@
 build/kernel.o: kernel/kernel.c | builddir
 	$(CC) $(CFLAGS) -c $< -o $@
-build/kernel.elf: build/kentry.o build/kernel.o | builddir
+
+build/graphics.o: lib/graphics.c | builddir
+	$(CC) $(CFLAGS) -c $< -o $@
+
+build/kernel.elf: build/kentry.o build/kernel.o build/graphics.o | builddir
 	$(LD) $(LDFLAGS) $^ -o $@
 build/kernel.bin: build/kernel.elf | builddir
 	$(OBJCOPY) -O binary $< $@
