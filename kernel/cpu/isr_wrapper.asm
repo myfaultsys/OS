@@ -26,6 +26,7 @@ isr_wrapper:
     global isr%1
     isr%1:
         cli
+        push dword 1
         push dword %1
         jmp isr_wrapper
 %endmacro
