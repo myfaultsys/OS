@@ -14,8 +14,9 @@ void kernel(void) {
         cursor_set_position(30 + i % 10, 12 + i % 5);
         spawn_char_vga(30 + i % 10, 12 + i % 5, 'A', 20 + i % 10);
         i++;
-        __asm__ volatile ("sti");
-
+        if (i == 3) {
+            __asm__ volatile ("sti");
+        }
     }
     __asm__ volatile (
         "hlt"

@@ -70,7 +70,7 @@ waiting:
 	push 0xffff
 	pop cx
 .loop_1:
-	push 0x1fff
+	push 0x00ff
 	pop dx
 .loop_2:
 	dec dx

@@ -207,7 +207,7 @@ waiting:
     push dword 0xffff
     pop ecx
 .loop_1:
-    push dword 0x1fff
+    push dword 0x00ff
     pop edx
 .loop_2:
     dec edx

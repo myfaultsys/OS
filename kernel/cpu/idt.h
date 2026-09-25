@@ -16,6 +16,6 @@ typedef struct {
 
 void IDT_set_gate(InterruptDescriptor_t *IDT, u16 interrupt_vector, u32 offset, u16 segment, u8 flags);
 void idt_init(void);
-void interrupt_handler(void);
+void interrupt_handler(u32 interrupt_vector, u32 error_code);
 
 #endif
