@@ -3,8 +3,6 @@
 
 extern void isr_wrapper(void);
 
-__attribute__((noreturn)) void interrupt_handler(void);
-
 static InterruptDescriptor_t IDT[256];
 static IDTR_t idtr;
 

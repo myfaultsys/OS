@@ -84,9 +84,10 @@ A20_enable:
     ret
 
 load_kernel:
-    xor ax, ax
+    ;xor ax, ax
+    ;weird... only works if we load into ax twice?
     mov ax, KERNEL_REALMODE_ADDRESS
-    mov ax, 0x1000
+    mov ax, KERNEL_REALMODE_ADDRESS
     mov es, ax
     xor bx, bx
     mov ah, BIOS_DISK_READ_SERVICE
@@ -206,7 +207,7 @@ waiting:
     push dword 0xffff
     pop ecx
 .loop_1:
-    push dword 0x00ff
+    push dword 0x1fff
     pop edx
 .loop_2:
     dec edx
