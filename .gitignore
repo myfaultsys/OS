@@ -1,8 +1,9 @@
 # Prerequisites
 *.d
 
-# Binaries
+# Binaries And Images
 *.bin
+*.img
 
 # Kate
 *.kate-swp

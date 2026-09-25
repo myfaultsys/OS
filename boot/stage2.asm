@@ -3,8 +3,6 @@
 
 %include "boot/macros.inc"
 
-extern _kernel_entry
-
 entry_stage_two:
     cli
     xor ax, ax
@@ -47,7 +45,7 @@ protected_mode:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    mov esp, 0x90000
+    mov esp, KERNEL_STACK
 
     cld
     call clear_screen
@@ -57,9 +55,20 @@ protected_mode:
     call print_32
 
     call waiting
+
+    mov esi, MSG32_RELOCATE_KERNEL
+    mov edi, FRAME_BUFFER_ADDRESS + 320
+    call print_32
+
     call waiting
 
     call relocate_kernel
+
+    mov esi, MSG32_KERNEL_JUMP
+    mov edi, FRAME_BUFFER_ADDRESS + 640
+    call print_32
+
+    call waiting
 
     jmp GDT_code_segment_offset:KERNEL_ADDRESS
 
@@ -144,7 +153,7 @@ halt:
     jmp halt
 
 print_32:
-    mov ah, 0xec
+    mov ah, 0xb4
     mov dx, 0x3d4
     mov al, 0x0f
     out dx, al
@@ -197,7 +206,7 @@ waiting:
     push dword 0xffff
     pop ecx
 .loop_1:
-    push dword 0x02ff
+    push dword 0x00ff
     pop edx
 .loop_2:
     dec edx
@@ -208,10 +217,12 @@ waiting:
 
 BOOT_DRIVE: db 0
 
-MSG32_GREETING: db "CPU ENTERED PROTECTED MODE!", 0
 MSG16_A20: db "ENABLED A20 LINE!", NEWLINE, 0
 MSG16_KERNEL_LOADED: db "KERNEL LOADED INTO RAM!", NEWLINE, 0
 MSG16_GDT_LOADED: db "GLOBAL DESCRIPTOR TABLE LOADED!", NEWLINE, 0
 MSG16_PROTECTED_MODE_JUMP: db "JUMPING INTO 32-BIT PROTECTED MODE!", NEWLINE, 0
+MSG32_GREETING: db "CPU ENTERED PROTECTED MODE!", 0
+MSG32_RELOCATE_KERNEL: db "RELOCATING KERNEL TO 0x100000!", 0
+MSG32_KERNEL_JUMP: db "JUMPING TO KERNEL!", 0
 
-times 512 - ($-$$) db 0
+times 1024 - ($-$$) db 0

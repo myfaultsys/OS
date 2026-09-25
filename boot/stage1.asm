@@ -12,6 +12,7 @@ entry_stage_one:
 	mov sp, BOOTLOADER_ENTRY
 	mov [BOOT_DRIVE], dl
 
+	call waiting
 	call clear_screen
 	call waiting
 	mov si, MSG_STAGE1_GREETING
@@ -69,7 +70,7 @@ waiting:
 	push 0xffff
 	pop cx
 .loop_1:
-	push 0x04ff
+	push 0x00ff
 	pop dx
 .loop_2:
 	dec dx
@@ -104,5 +105,5 @@ MSG_STAGE2_LOAD: db 		"LOADING STAGE 2!", NEWLINE, 0
 MSG_STAGE2_IN_RAM: db "STAGE 2 SUCCESSFULLY LOADED INTO RAM!", NEWLINE, 0
 MSG_STAGE2_JUMP: db "JUMPING TO STAGE 2 BOOTLOADER...", NEWLINE, 0
 
-times 510 - ($-$$) db 1
+times 510 - ($-$$) db 0
 dw 0xaa55
