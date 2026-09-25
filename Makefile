@@ -29,7 +29,7 @@ build/kernel.bin: build/kernel.elf | builddir
 OS.img: build/stage1.bin build/stage2.bin build/kernel.bin | builddir
 	cat $^ > $@
 run: OS.img
-	@qemu-system-i386 -display gtk,zoom-to-fit=on  -drive format=raw,file=OS.img,if=floppy -boot a
+	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a
 debug: OS.img
 	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a -s -S
 clean:

@@ -7,6 +7,7 @@ volatile u8* vgabuffer = (volatile u8 *)0xb8000;
 
 void kernel(void) {
     idt_init();
+    PIC_remap(0x20, 0x28);
     cursor_set_position(79, 24);
     u32 i = 0;
     while (1) {
@@ -18,10 +19,5 @@ void kernel(void) {
             __asm__ volatile ("sti");
         }
     }
-    __asm__ volatile (
-        "hlt"
-        :
-        :
-        :
-    );
+    __asm__ volatile ("hlt");
 }
