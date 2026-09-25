@@ -5,8 +5,8 @@
 volatile u8* vgabuffer = (volatile u8 *)0xb8000;
 
 void kernel(void) {
-    clear_screen();
-    cursor_set_position(80, 25);
+    //clear_screen();
+    cursor_set_position(79, 24);
     __asm__ volatile (
         "hlt"
         :

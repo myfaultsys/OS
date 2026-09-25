@@ -25,7 +25,7 @@ void vga_ctl_set_high_byte(u8 byte) {
 }
 
 void cursor_set_position(u8 x, u8  y) {
-    u16 frame_buffer_offset = (x + VGA_WIDTH*y)*2;
+    u16 frame_buffer_offset = (x + VGA_WIDTH*y);
     vga_ctl_set_high_byte((frame_buffer_offset >> 8));
     vga_ctl_set_low_byte(frame_buffer_offset & 0x00ff);
     return;
