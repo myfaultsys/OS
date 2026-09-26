@@ -49,6 +49,7 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
     u8 key = inb(0x64);
     spawn_char_vga(7,7,key+'0', 0xec);
     u8 key2 = inb(0x60);
+    if (key2 == 1) reboot();
     spawn_char_vga(7,9,key2+'0', 0x4e);
     spawn_char_vga(79,24,'X', 0x4e);
     PIC_EOI(interrupt_vector);
@@ -129,4 +130,9 @@ u16 PIC_get_ISR(void) {
     outb(PIC_MASTER_COMMAND_PORT, PIC_READ_ISR);
     outb(PIC_SLAVE_DATA_PORT, PIC_READ_ISR);
     return (inb(PIC_SLAVE_DATA_PORT) << 8 | inb(PIC_MASTER_DATA_PORT));
+}
+
+void start_interrupts(void) {
+    __asm__ volatile ("sti");
+    return;
 }

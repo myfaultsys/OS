@@ -25,3 +25,7 @@ u8 inb(u16 port) {
 void reboot(void) {
     outb(PS2_KEYBOARD_CONTROLLER_PORT, 0xfe);
 }
+
+void halt(void) {
+    __asm__ volatile ("hlt");
+}

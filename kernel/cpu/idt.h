@@ -24,5 +24,6 @@ void IRQ_set_mask(u8 irq_line);
 void IRQ_clear_mask(u8 irq_line);
 u16 PIC_get_IRR(void);
 u16 PIC_get_ISR(void);
+void start_interrupts(void);
 
 #endif
