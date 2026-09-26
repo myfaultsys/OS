@@ -3,10 +3,13 @@
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
+
 #define VGA_CONTROLLER_ADDRESS_PORT 0x3d4
 #define VGA_CONTROLLER_DATA_PORT 0x3d5
+
 #define CURSOR_POSITION_SELECT_HIGH_BYTE 0x0e
 #define CURSOR_POSITION_SELECT_LOW_BYTE 0x0f
+
 #define PIC_MASTER_COMMAND_PORT 0x0020
 #define PIC_MASTER_DATA_PORT    0x0021
 #define PIC_SLAVE_COMMAND_PORT  0x00a0
@@ -20,6 +23,10 @@
 #define PIC_MASK_ALL            0xff
 #define PIC_READ_IRR            0x0a
 #define PIC_READ_ISR            0x0b
+#define PIC_MASTER_OFFSET       0x20
+#define PIC_SLAVE_OFFSET        0x28
+
+#define PS2_CONTROLLER          0x21
 
 typedef unsigned char u8;
 typedef unsigned short u16;

@@ -17,13 +17,13 @@
 %define STAGE2_TARGET_SECTOR            0x02	;	cl
 %define STAGE2_ADDRESS                  0x8000	;	bx
 
-%define KERNEL_SECTOR_COUNT             0x0a
+%define KERNEL_SECTOR_COUNT             0x13
 %define KERNEL_CYLINDER                 0x00
 %define KERNEL_HEAD                     0x00
 %define KERNEL_TARGET_SECTOR            0x04
 %define KERNEL_REALMODE_ADDRESS         0x1000
 %define KERNEL_ADDRESS                  0x100000
-%define KERNEL_SIZE_IN_BYTES            5000
+%define KERNEL_SIZE_IN_BYTES            10000
 %define KERNEL_STACK                    0x500000
 
 %define FAST_A20_GATE_REGISTER          0x92

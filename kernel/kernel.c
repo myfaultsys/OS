@@ -7,7 +7,7 @@ volatile u8* vgabuffer = (volatile u8 *)0xb8000;
 
 void kernel(void) {
     idt_init();
-    PIC_remap(0x20, 0x28);
+    PIC_remap(PIC_MASTER_OFFSET, PIC_SLAVE_OFFSET);
     cursor_set_position(79, 24);
     u32 i = 0;
     while (1) {
