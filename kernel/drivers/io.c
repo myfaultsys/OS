@@ -22,6 +22,23 @@ u8 inb(u16 port) {
     return port_return_value;
 }
 
+void pit_init(u32 frequency) {
+    u32 value = PIT_FREQUENCY / frequency;
+    outb(PIT_COMMAND_PORT, SQUARE_WAVE_MODE);
+    outb(0x40, (value & 0xff));
+    outb(0x40, (value >> 8) && 0xff);
+}
+
+volatile u32 ticks = 0;
+
+void sleep(u32 count) {
+    u32 time = ticks + count;
+    while (ticks < time) {
+        halt();
+    }
+    return;
+}
+
 void reboot(void) {
     outb(PS2_KEYBOARD_CONTROLLER_PORT, 0xfe);
 }

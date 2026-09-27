@@ -14,6 +14,8 @@ typedef struct {
     u64 base;
 }__attribute__((packed)) IDTR_t;
 
+extern volatile u32 ticks;
+
 void IDT_set_gate(InterruptDescriptor_t *IDT, u16 interrupt_vector, u32 offset, u16 segment, u8 flags);
 void idt_init(void);
 void interrupt_handler(u32 interrupt_vector, u32 error_code);

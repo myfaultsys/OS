@@ -1,7 +1,8 @@
 #include "types.h"
 #include "drivers/vga.h"
+#include "string.h"
 
-void print(const u8 *text, u8 x, u8 y) {
+void print(u8 *text, u8 x, u8 y) {
     u32 offset = 0;
     for (;;) {
         if (*text == '\0') break;

@@ -18,13 +18,15 @@ build/%.o: kernel/cpu/%.asm | builddir
 	$(ASM) -f elf32 $< -o $@
 build/%.o: kernel/cpu/%.c | builddir
 	$(CC) $(CFLAGS) -c $< -o $@
+build/%.o: kernel/memory/%.c | builddir	
+	$(CC) $(CFLAGS) -c $< -o $@
 build/%.o: lib/%.c | builddir
 	$(CC) $(CFLAGS) -c $< -o $@
 build/kentry.o: kernel/kentry.asm | builddir
 	$(ASM) -f elf32 $< -o $@
 build/kernel.o: kernel/kernel.c | builddir
 	$(CC) $(CFLAGS) -c $< -o $@
-build/kernel.elf: build/kentry.o build/kernel.o build/vga.o build/io.o build/idt.o build/isr_wrapper.o build/string.o | builddir
+build/kernel.elf: build/kentry.o build/kernel.o build/vga.o build/io.o build/idt.o build/isr_wrapper.o build/string.o build/malloc.o | builddir
 	$(LD) $(LDFLAGS) $^ -o $@
 build/kernel.bin: build/kernel.elf | builddir
 	$(OBJCOPY) -O binary $< $@
