@@ -5,7 +5,7 @@ volatile u8* VGA_buffer = (volatile u8*)0xb8000;
 
 void spawn_char_vga(const u8 posx, u8 posy, i8 character, u8 color) {
     volatile u8* VGA_buffer = (volatile u8*)0xb8000;
-    if (posy > 80 || posy > 25) return;
+    if (posy > VGA_WIDTH || posy > VGA_HEIGHT) return;
     u16 offset = (u16)((posx + VGA_WIDTH*posy)*(u8)2);
     VGA_buffer[offset] = character;
     VGA_buffer[offset + 1] = color;
@@ -44,10 +44,7 @@ void animation_loop(void) {
     u32 i = 0;
     u32 count = 30;
     while (count) {
-        for (u32 i = 0; i < 1; i++) {
-            sleep(1);
-        }
-        for (i32 j = 0; j < 100000000; j++) {}
+        sleep(500);
         cursor_set_position(30 + i % 10, 12 + i % 5);
         spawn_char_vga(30 + i % 10, 12 + i % 5, (i + '0') % 32, 20 + i % 10);
         i++;

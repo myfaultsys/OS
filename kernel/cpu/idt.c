@@ -72,16 +72,12 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                     reboot();
                     break;
                 }
-                case KEY_1: {
+                case KEY_F1: {
                     clear_screen();
                     cursor.x_position = 39;
                     cursor.y_position = 12;
-                    cursor_set_position(39,12);
+                    cursor_set_position(VGA_WIDTH/2 - 1, VGA_HEIGHT/2 - 1);
                     i = 0;
-                    break;
-                }
-                case KEY_F1: {
-                    memcpy(nullptr, nullptr, 1);
                     break;
                 }
                 case KEY_UP: {
@@ -90,12 +86,12 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                     break;
                 }
                 case KEY_DOWN: {
-                    if (cursor.y_position == 24) break;
+                    if (cursor.y_position == VGA_HEIGHT - 1) break;
                     cursor_set_position(cursor.x_position, ++cursor.y_position);
                     break;
                 }
                 case KEY_RIGHT: {
-                    if (cursor.x_position == 79) break;
+                    if (cursor.x_position == VGA_WIDTH - 1) break;
                     cursor_set_position(++cursor.x_position, cursor.y_position);
                     break;
                 }
@@ -107,6 +103,10 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                 case KEY_BACK: {
                     spawn_char_vga(cursor.x_position--, cursor.y_position, ' ', 0x00);
                     cursor_set_position(cursor.x_position, cursor.y_position);
+                    break;
+                }
+                case KEY_APOST: {
+                    //heap_dump();
                     break;
                 }
                 default:

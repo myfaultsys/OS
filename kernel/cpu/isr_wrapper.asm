@@ -3,6 +3,7 @@ global isr_stub_table
 
 extern interrupt_handler
 
+
 section .text
 
 isr_wrapper:
