@@ -45,8 +45,6 @@ isr_wrapper:
 
 section .data
 
-global isr_stub_table
-
 isr_stub_table:
 %assign i 0
 %rep 256

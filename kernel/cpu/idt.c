@@ -33,12 +33,10 @@ void idt_init(void) {
 }
 
 void interrupt_handler(u32 interrupt_vector, u32 error_code) {
-    (void)interrupt_vector;
-    (void)error_code;
     switch (interrupt_vector) {
         case 0x21: {
             u8 key = inb(0x60);
-            spawn_char_vga(40,12,key + '0', 0xb4);
+            spawn_char_vga(39,12,key + '0', 0x0f);
             if (key == 1) reboot();
             break;
         }
