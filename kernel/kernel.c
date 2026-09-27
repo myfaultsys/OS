@@ -9,8 +9,8 @@ cursor_t cursor;
 
 void kernel(void) {
 
-    cursor.x_position = 39;
-    cursor.y_position = 12;
+    cursor.x_position = VGA_WIDTH/2 - 1;
+    cursor.y_position = VGA_HEIGHT/2 - 1;
     cursor_set_position(cursor.x_position, cursor.y_position);
     
     idt_init();
@@ -20,19 +20,16 @@ void kernel(void) {
     //dump_heap();
     
     const u8 hello[] = "hello";
-    print((void*)hello, 37,18);
+    print((void*)hello, 39,18);
 
     u8 buffer[sizeof(hello)];
 
     memcpy((void*)hello, (void*)buffer, sizeof(hello));
-    print(buffer, 37, 17);
+    print(buffer, 32, 18);
 
     while (1) {
-
         sleep(10);
-
         u8 *ptr = (u8*)init_page();
-    
         animation_loop();
 
     }

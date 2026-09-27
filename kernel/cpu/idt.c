@@ -36,6 +36,8 @@ void IDT_set_gate(InterruptDescriptor_t *IDT, u16 interrupt_vector, u32 offset, 
     return;
 }
 
+extern u8 GDT_code_segment_offset;
+
 void idt_init(void) {
     idtr.base = (u32)&IDT[0];
     idtr.limit = IDT_size;
@@ -48,7 +50,7 @@ void idt_init(void) {
     return;
 }
 
-u32 i = 0;
+static u32 i = 0;
 void interrupt_handler(u32 interrupt_vector, u32 error_code) {
     switch (interrupt_vector) {
         case 0x20: {
@@ -74,8 +76,8 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                 }
                 case KEY_F1: {
                     clear_screen();
-                    cursor.x_position = 39;
-                    cursor.y_position = 12;
+                    cursor.x_position = VGA_WIDTH/2 - 3;
+                    cursor.y_position = VGA_HEIGHT/2 - 3;
                     cursor_set_position(VGA_WIDTH/2 - 1, VGA_HEIGHT/2 - 1);
                     i = 0;
                     break;

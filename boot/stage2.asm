@@ -154,7 +154,7 @@ halt:
     jmp halt
 
 print_32:
-    mov ah, 0x04
+    mov ah, 0x0a
     mov dx, 0x3d4
     mov al, 0x0f
     out dx, al
