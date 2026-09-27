@@ -5,6 +5,18 @@
 #include "memory/malloc.h"
 #include "string.h"
 
+const u8 scancode_to_ascii[128] = {
+    0,   27,  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0', '\xE2', '`', '\b',
+ '\t',  'q',  'w',  'e',  'r',  't',  'z',  'u',  'i',  'o',  'p', '\x81', '+', '\n',
+    0,  'a',  's',  'd',  'f',  'g',  'h',  'j',  'k',  'l', '\x94', '\x84', '^',
+    0,  '#',  'y',  'x',  'c',  'v',  'b',  'n',  'm',  ',',  '.',  '-',    0,
+  '*',    0,  ' ',    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,  '-',    0,    0,    0,  '+',    0,    0,    0,
+    0,  '<',    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0
+};
+
 extern cursor_t cursor;
 
 extern void isr_wrapper(void);
@@ -36,6 +48,7 @@ void idt_init(void) {
     return;
 }
 
+u32 i = 0;
 void interrupt_handler(u32 interrupt_vector, u32 error_code) {
     switch (interrupt_vector) {
         case 0x20: {
@@ -44,7 +57,14 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
         }
         case 0x21: {
             KeyboardScancode_t key = inb(0x60);
-            spawn_char_vga(cursor.x_position, cursor.y_position, key + '0', 0x0f);
+            if (!(key & 0b10000000)) {
+                if (key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN || key == KEY_LEFT) goto handle_character;
+                spawn_char_vga(cursor.x_position++ % 80, cursor.y_position % 25, scancode_to_ascii[key], 0x0f);
+                cursor_set_position(cursor.x_position % 80, cursor.y_position % 25);
+                i++;
+            }
+            
+        handle_character:
             switch(key) {
                 case KEY_ESCAPE: {
                     reboot();
@@ -52,6 +72,10 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                 }
                 case KEY_1: {
                     clear_screen();
+                    cursor.x_position = 0;
+                    cursor.y_position = 0;
+                    cursor_set_position(0,0);
+                    i = 0;
                     break;
                 }
                 case KEY_F1: {
@@ -59,23 +83,19 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                     break;
                 }
                 case KEY_UP: {
-                    cursor.y_position++;
-                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    cursor_set_position(cursor.x_position, --cursor.y_position);
                     break;
                 }
                 case KEY_DOWN: {
-                    cursor.y_position--;
-                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    cursor_set_position(cursor.x_position, ++cursor.y_position);
                     break;
                 }
                 case KEY_RIGHT: {
-                    cursor.x_position++;
-                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    cursor_set_position(++cursor.x_position, cursor.y_position);
                     break;
                 }
                 case KEY_LEFT: {
-                    cursor.x_position--;
-                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    cursor_set_position(--cursor.x_position, cursor.y_position);
                     break;
                 }
                 default:

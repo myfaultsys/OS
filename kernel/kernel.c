@@ -15,10 +15,10 @@ void kernel(void) {
     PIC_remap(PIC_MASTER_OFFSET, PIC_SLAVE_OFFSET);
     pit_init(100);
     start_interrupts();
-    dump_heap();
+    //dump_heap();
     while (1) {
 
-        sleep(30);
+        sleep(10);
 
         const u8 hello[] = "hello";
         print((void*)hello, 0,18);

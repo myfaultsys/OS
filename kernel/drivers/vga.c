@@ -44,8 +44,8 @@ void animation_loop(void) {
     u32 i = 0;
     u32 count = 30;
     while (count) {
-        for (u32 i = 0; i < 50; i++) {
-            sleep(50);
+        for (u32 i = 0; i < 1; i++) {
+            sleep(1);
         }
         for (i32 j = 0; j < 100000000; j++) {}
         cursor_set_position(30 + i % 10, 12 + i % 5);

@@ -1,7 +1,7 @@
 ASM = nasm
-CC = gcc
-LD = ld
-OBJCOPY = objcopy
+CC = x86_64-elf-gcc
+LD =  x86_64-elf-ld
+OBJCOPY =  x86_64-elf-objcopy
 
 ASMFLAGS = -f bin
 CFLAGS = -m32 -ffreestanding -fno-pie -fno-stack-protector -Ikernel -Ilib -Imath
