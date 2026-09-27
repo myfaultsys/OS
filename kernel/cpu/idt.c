@@ -58,7 +58,7 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
         case 0x21: {
             KeyboardScancode_t key = inb(0x60);
             if (!(key & KEY_RELEASED_BIT)) {
-                if (key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN || key == KEY_LEFT) goto handle_character;
+                if (key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN || key == KEY_LEFT || key == KEY_BACK) goto handle_character;
                 spawn_char_vga(cursor.x_position++ % 80, cursor.y_position % 25, scancode_to_ascii[key], 0x0f);
                 if (cursor.x_position == 80) { cursor.x_position = 0; cursor.y_position++; }
                 if (cursor.y_position == 25) { cursor.y_position = 0; }
@@ -74,9 +74,9 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                 }
                 case KEY_1: {
                     clear_screen();
-                    cursor.x_position = 0;
-                    cursor.y_position = 0;
-                    cursor_set_position(0,0);
+                    cursor.x_position = 39;
+                    cursor.y_position = 12;
+                    cursor_set_position(39,12);
                     i = 0;
                     break;
                 }
@@ -102,6 +102,11 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                 case KEY_LEFT: {
                     if (cursor.x_position == 0) break;
                     cursor_set_position(--cursor.x_position, cursor.y_position);
+                    break;
+                }
+                case KEY_BACK: {
+                    spawn_char_vga(cursor.x_position--, cursor.y_position, ' ', 0x00);
+                    cursor_set_position(cursor.x_position, cursor.y_position);
                     break;
                 }
                 default:

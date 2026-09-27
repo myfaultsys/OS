@@ -57,7 +57,7 @@ protected_mode:
     call waiting
 
     mov esi, MSG32_RELOCATE_KERNEL
-    mov edi, FRAME_BUFFER_ADDRESS + 320
+    mov edi, FRAME_BUFFER_ADDRESS + 160
     call print_32
 
     call waiting
@@ -65,7 +65,7 @@ protected_mode:
     call relocate_kernel
 
     mov esi, MSG32_KERNEL_JUMP
-    mov edi, FRAME_BUFFER_ADDRESS + 640
+    mov edi, FRAME_BUFFER_ADDRESS + 320
     call print_32
 
     call waiting
