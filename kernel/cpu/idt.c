@@ -38,28 +38,15 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
     switch (interrupt_vector) {
         case 0x21: {
             u8 key = inb(0x60);
-            spawn_char_vga(7,7,'A', 0xec);
-            PIC_EOI(0x01);
-            return;
+            spawn_char_vga(40,12,key + '0', 0xb4);
+            if (key == 1) reboot();
             break;
         }
         default:
             break;
     }
-    u8 key = inb(0x64);
-    spawn_char_vga(7,7,key+'0', 0xec);
-    u8 key2 = inb(0x60);
-    if (key2 == 1) reboot();
-    spawn_char_vga(7,9,key2+'0', 0x4e);
-    spawn_char_vga(79,24,'X', 0x4e);
     PIC_EOI(interrupt_vector);
     return;
-
-    /*
-    __asm__ volatile (
-        "cli; hlt" : : :
-    );
-    */
 }
 
 void PIC_EOI(u8 irq) {

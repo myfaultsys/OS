@@ -40,11 +40,13 @@ void clear_screen(void) {
     return;
 }
 
-void drawing(void) {
-    for (u32 i = 0; i < VGA_WIDTH; i++) {
-        for (u32 j = 0; j < VGA_HEIGHT; j++) {
-            spawn_char_vga(i % VGA_WIDTH, j % VGA_HEIGHT, (i*j + '0') % 110, i*j+i+j % 255);
-        }
+void animation_loop(void) {
+    u32 i = 0;
+    while (1) {
+        for (i32 j = 0; j < 100000000; j++) {}
+        cursor_set_position(30 + i % 10, 12 + i % 5);
+        spawn_char_vga(30 + i % 10, 12 + i % 5, (i + '0') % 32, 20 + i % 10);
+        i++;
     }
     return;
 }

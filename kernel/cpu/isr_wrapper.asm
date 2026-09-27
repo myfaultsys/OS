@@ -6,16 +6,16 @@ extern interrupt_handler
 section .text
 
 isr_wrapper:
-    pushad
     cld
     call interrupt_handler
-    popad
     add esp, 0x08
+    popad
     iret
 
 %macro ISR_NOERR 1
     global isr%1
     isr%1:
+        pushad
         cli
         push dword 0
         push dword %1
@@ -25,6 +25,7 @@ isr_wrapper:
 %macro ISR_ERR 1
     global isr%1
     isr%1:
+        pushad
         cli
         push dword 1
         push dword %1
