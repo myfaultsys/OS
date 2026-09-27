@@ -28,6 +28,8 @@
 
 #define PS2_CONTROLLER          0x21
 
+#define KEY_RELEASED_BIT        0b10000000
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;

@@ -8,8 +8,8 @@
 cursor_t cursor;
 
 void kernel(void) {
-    cursor.x_position = 0;
-    cursor.y_position = 0;
+    cursor.x_position = 39;
+    cursor.y_position = 12;
     cursor_set_position(cursor.x_position, cursor.y_position);
     idt_init();
     PIC_remap(PIC_MASTER_OFFSET, PIC_SLAVE_OFFSET);
@@ -21,12 +21,12 @@ void kernel(void) {
         sleep(10);
 
         const u8 hello[] = "hello";
-        print((void*)hello, 0,18);
+        //print((void*)hello, 0,18);
 
         u8 buffer[sizeof(hello)];
 
-        memcpy((void*)hello, (void*)buffer, sizeof(hello));
-        print(buffer, 0, 17);
+        //memcpy((void*)hello, (void*)buffer, sizeof(hello));
+        //print(buffer, 0, 17);
 
         u8 *ptr = (u8*)init_page();
     
