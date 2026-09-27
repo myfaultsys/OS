@@ -25,7 +25,7 @@ void kernel(void) {
 
         u8 buffer[sizeof(hello)];
 
-        //memcpy((void*)hello, (void*)buffer, sizeof(hello));
+        memcpy((void*)hello, (void*)buffer, sizeof(hello));
         print(buffer, 0, 17);
 
         u8 *ptr = (u8*)init_page();

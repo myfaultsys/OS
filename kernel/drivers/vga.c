@@ -34,7 +34,7 @@ void cursor_set_position(u8 x, u8  y) {
 void clear_screen(void) {
     for (u32 i = 0; i < VGA_WIDTH; i++) {
         for (u32 j = 0; j < VGA_HEIGHT; j++) {
-            spawn_char_vga(i % VGA_WIDTH, j % VGA_HEIGHT, ' ', 0xb4);
+            spawn_char_vga(i % VGA_WIDTH, j % VGA_HEIGHT, ' ', 0x0f);
         }
     }
     return;

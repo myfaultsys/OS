@@ -44,7 +44,7 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
         }
         case 0x21: {
             KeyboardScancode_t key = inb(0x60);
-            spawn_char_vga(39,12,key + '0', 0x0f);
+            spawn_char_vga(cursor.x_position, cursor.y_position, key + '0', 0x0f);
             switch(key) {
                 case KEY_ESCAPE: {
                     reboot();
