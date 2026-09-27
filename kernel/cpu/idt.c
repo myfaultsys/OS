@@ -103,8 +103,10 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                     break;
                 }
                 case KEY_BACK: {
+                    if (cursor.x_position == 0) break;
                     spawn_char_vga(cursor.x_position--, cursor.y_position, ' ', 0x00);
                     cursor_set_position(cursor.x_position, cursor.y_position);
+                    spawn_char_vga(cursor.x_position, cursor.y_position, ' ', 0x00);
                     break;
                 }
                 case KEY_APOST: {
