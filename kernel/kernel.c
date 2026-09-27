@@ -12,19 +12,23 @@ void kernel(void) {
     pit_init(100);
     start_interrupts();
 
+    dump_heap();
+    sleep(3000);
     while (1) {
 
         sleep(30);
 
-        u8 text[] = "Printing And Memory (kinda) Work!";
-        u8 buffer[sizeof(text)];
+        const u8 hello[] = "hello";
+        print(hello, 0,18);
 
-        memcpy(text, buffer, sizeof(text));
-        print(text, 0, 17);
+        u8 buffer[sizeof(hello)];
+
+        memcpy(hello, buffer, sizeof(hello));
+        print(buffer, 0, 17);
 
         u8 *ptr = (u8*)init_page();
-
-        animation_loop();
+    
+    animation_loop();
 
     }
     halt();

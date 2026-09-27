@@ -13,5 +13,6 @@ typedef struct memory_page {
 
 u8 memcpy(void *source, void *destination, u32 size);
 mem_t *init_page(void);
+void dump_heap(void);
 
 #endif
