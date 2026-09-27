@@ -5,31 +5,32 @@
 #include "string.h"
 #include "memory/malloc.h"
 
-void kernel(void) {
+cursor_t cursor;
 
+void kernel(void) {
+    cursor.x_position = 0;
+    cursor.y_position = 0;
+    cursor_set_position(cursor.x_position, cursor.y_position);
     idt_init();
     PIC_remap(PIC_MASTER_OFFSET, PIC_SLAVE_OFFSET);
     pit_init(100);
     start_interrupts();
-
     dump_heap();
-    sleep(3000);
     while (1) {
 
         sleep(30);
 
         const u8 hello[] = "hello";
-        print(hello, 0,18);
+        print((void*)hello, 0,18);
 
         u8 buffer[sizeof(hello)];
 
-        memcpy(hello, buffer, sizeof(hello));
+        //memcpy((void*)hello, (void*)buffer, sizeof(hello));
         print(buffer, 0, 17);
 
         u8 *ptr = (u8*)init_page();
     
-    animation_loop();
+        //animation_loop();
 
     }
-    halt();
 }

@@ -2,6 +2,10 @@
 #include "idt.h"
 #include "drivers/io.h"
 #include "drivers/vga.h"
+#include "memory/malloc.h"
+#include "string.h"
+
+extern cursor_t cursor;
 
 extern void isr_wrapper(void);
 extern void *isr_stub_table[256];
@@ -39,9 +43,44 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
             break;
         }
         case 0x21: {
-            u8 key = inb(0x60);
+            KeyboardScancode_t key = inb(0x60);
             spawn_char_vga(39,12,key + '0', 0x0f);
-            if (key == 1) reboot();
+            switch(key) {
+                case KEY_ESCAPE: {
+                    reboot();
+                    break;
+                }
+                case KEY_1: {
+                    clear_screen();
+                    break;
+                }
+                case KEY_F1: {
+                    memcpy(nullptr, nullptr, 1);
+                    break;
+                }
+                case KEY_UP: {
+                    cursor.y_position++;
+                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    break;
+                }
+                case KEY_DOWN: {
+                    cursor.y_position--;
+                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    break;
+                }
+                case KEY_RIGHT: {
+                    cursor.x_position++;
+                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    break;
+                }
+                case KEY_LEFT: {
+                    cursor.x_position--;
+                    cursor_set_position(cursor.x_position, cursor.y_position);
+                    break;
+                }
+                default:
+                    break;
+            }
             break;
         }
         default:

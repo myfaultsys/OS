@@ -3,7 +3,7 @@
 
 volatile u8* VGA_buffer = (volatile u8*)0xb8000;
 
-void spawn_char_vga(u8 posx, u8 posy, i8 character, u8 color) {
+void spawn_char_vga(const u8 posx, u8 posy, i8 character, u8 color) {
     volatile u8* VGA_buffer = (volatile u8*)0xb8000;
     if (posy > 80 || posy > 25) return;
     u16 offset = (u16)((posx + VGA_WIDTH*posy)*(u8)2);
@@ -34,7 +34,7 @@ void cursor_set_position(u8 x, u8  y) {
 void clear_screen(void) {
     for (u32 i = 0; i < VGA_WIDTH; i++) {
         for (u32 j = 0; j < VGA_HEIGHT; j++) {
-            spawn_char_vga(i % VGA_WIDTH, j % VGA_HEIGHT, ' ', 0x00);
+            spawn_char_vga(i % VGA_WIDTH, j % VGA_HEIGHT, ' ', 0xb4);
         }
     }
     return;
