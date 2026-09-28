@@ -8,4 +8,7 @@ void cursor_set_position(u8 x, u8  y);
 void clear_screen(void);
 void animation_loop(void);
 
+#define WHITEONBLACK    0x0f
+#define BLACK           0x00
+
 #endif

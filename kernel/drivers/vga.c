@@ -42,11 +42,11 @@ void clear_screen(void) {
 
 void animation_loop(void) {
     u32 i = 0;
-    u32 count = 30;
+    u32 count = 50;
     while (count) {
-        sleep(500);
-        cursor_set_position(30 + i % 10, 12 + i % 5);
-        spawn_char_vga(30 + i % 10, 12 + i % 5, (i + '0') % 32, 20 + i % 10);
+        sleep(50);
+        //cursor_set_position(30 + i % 10, 12 + i % 5);
+        spawn_char_vga(30 + i % 10, 12 + i % 5, (i + '0') % 32, ((20 + i) % 50)&0x0f);
         i++;
         count--;
     }

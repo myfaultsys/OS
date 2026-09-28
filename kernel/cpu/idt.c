@@ -5,20 +5,7 @@
 #include "memory/malloc.h"
 #include "string.h"
 
-const u8 scancode_to_ascii[128] = {
-    0,   27,  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0', '\xE2', '`', '\b',
- '\t',  'q',  'w',  'e',  'r',  't',  'z',  'u',  'i',  'o',  'p', '\x81', '+', '\n',
-    0,  'a',  's',  'd',  'f',  'g',  'h',  'j',  'k',  'l', '\x94', '\x84', '^',
-    0,  '#',  'y',  'x',  'c',  'v',  'b',  'n',  'm',  ',',  '.',  '-',    0,
-  '*',    0,  ' ',    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,  '-',    0,    0,    0,  '+',    0,    0,    0,
-    0,  '<',    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0
-};
-
 extern cursor_t cursor;
-
 extern void isr_wrapper(void);
 extern void *isr_stub_table[256];
 
@@ -36,13 +23,11 @@ void IDT_set_gate(InterruptDescriptor_t *IDT, u16 interrupt_vector, u32 offset, 
     return;
 }
 
-extern u8 GDT_code_segment_offset;
-
 void idt_init(void) {
     idtr.base = (u32)&IDT[0];
     idtr.limit = IDT_size;
-    for (u16 i = 0; i < 255; i++) {
-        IDT_set_gate(IDT, i, (u32)isr_stub_table[i], 0x08, 0b10001110);
+    for (u16 i = 0; i < sizeof(IDT)/sizeof(IDT[0]); i++) {
+        IDT_set_gate(IDT, i, (u32)isr_stub_table[i], GDT_CODE_SEGMENT_OFFSET, 0b10001110);
     }
     __asm__ volatile (
         "lidt %0" : : "m"(idtr) :
@@ -50,22 +35,20 @@ void idt_init(void) {
     return;
 }
 
-static u32 i = 0;
-void interrupt_handler(u32 interrupt_vector, u32 error_code) {
+void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
     switch (interrupt_vector) {
-        case 0x20: {
+        case IRQ0: {
             ticks++;
             break;
         }
-        case 0x21: {
-            KeyboardScancode_t key = inb(0x60);
+        case IRQ1: {
+            KeyboardScancode_t key = inb(PS2_DATA_PORT);
             if (!(key & KEY_RELEASED_BIT)) {
                 if (key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN || key == KEY_LEFT || key == KEY_BACK) goto handle_character;
-                spawn_char_vga(cursor.x_position++ % 80, cursor.y_position % 25, scancode_to_ascii[key], 0x0f);
-                if (cursor.x_position == 80) { cursor.x_position = 0; cursor.y_position++; }
-                if (cursor.y_position == 25) { cursor.y_position = 0; }
-                cursor_set_position(cursor.x_position % 80, cursor.y_position % 25);
-                i++;
+                spawn_char_vga(cursor.x_position++ % VGA_WIDTH, cursor.y_position % VGA_HEIGHT, scancode_to_ascii[key], WHITEONBLACK);
+                if (cursor.x_position == VGA_WIDTH) { cursor.x_position = 0; cursor.y_position++; }
+                if (cursor.y_position == VGA_HEIGHT) { cursor.y_position = 0; }
+                cursor_set_position(cursor.x_position % VGA_WIDTH, cursor.y_position % VGA_HEIGHT);
             }
             
         handle_character:
@@ -79,7 +62,6 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                     cursor.x_position = VGA_WIDTH/2 - 3;
                     cursor.y_position = VGA_HEIGHT/2 - 3;
                     cursor_set_position(VGA_WIDTH/2 - 1, VGA_HEIGHT/2 - 1);
-                    i = 0;
                     break;
                 }
                 case KEY_UP: {
@@ -104,9 +86,9 @@ void interrupt_handler(u32 interrupt_vector, u32 error_code) {
                 }
                 case KEY_BACK: {
                     if (cursor.x_position == 0) break;
-                    spawn_char_vga(cursor.x_position--, cursor.y_position, ' ', 0x00);
+                    spawn_char_vga(cursor.x_position--, cursor.y_position, ' ', BLACK);
                     cursor_set_position(cursor.x_position, cursor.y_position);
-                    spawn_char_vga(cursor.x_position, cursor.y_position, ' ', 0x00);
+                    spawn_char_vga(cursor.x_position, cursor.y_position, ' ', BLACK);
                     break;
                 }
                 case KEY_APOST: {

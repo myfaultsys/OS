@@ -1,6 +1,9 @@
 #ifndef H_IDT
 #define H_IDT
 
+#define PS2_DATA_PORT   0x60
+#define PS2_STATUS_PORT 0x64
+
 typedef struct {
     u16 offset_low;
     u16 segment_selector;
@@ -28,5 +31,24 @@ void IRQ_clear_mask(u8 irq_line);
 u16 PIC_get_IRR(void);
 u16 PIC_get_ISR(void);
 void start_interrupts(void);
+
+typedef enum {
+    IRQ0 = 0x20,
+    IRQ1 = 0x21
+} interrupt_t;
+
+enum { GDT_CODE_SEGMENT_OFFSET = 0x08 };
+
+static const u8 scancode_to_ascii[128] = {
+    0,   27,  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0', '\xE2', '`', '\b',
+ '\t',  'q',  'w',  'e',  'r',  't',  'z',  'u',  'i',  'o',  'p', '\x81', '+', '\n',
+    0,  'a',  's',  'd',  'f',  'g',  'h',  'j',  'k',  'l', '\x94', '\x84', '^',
+    0,  '#',  'y',  'x',  'c',  'v',  'b',  'n',  'm',  ',',  '.',  '-',    0,
+  '*',    0,  ' ',    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,  '-',    0,    0,    0,  '+',    0,    0,    0,
+    0,  '<',    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0
+};
 
 #endif
