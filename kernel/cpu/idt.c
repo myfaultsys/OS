@@ -27,7 +27,7 @@ void idt_init(void) {
     idtr.base = (u32)&IDT[0];
     idtr.limit = IDT_size;
     for (u16 i = 0; i < sizeof(IDT)/sizeof(IDT[0]); i++) {
-        IDT_set_gate(IDT, i, (u32)isr_stub_table[i], GDT_CODE_SEGMENT_OFFSET, 0b10001110);
+        IDT_set_gate(IDT, i, (u32)isr_stub_table[i], GDT_CODE_SEGMENT_OFFSET, GATE_FLAGS);
     }
     __asm__ volatile (
         "lidt %0" : : "m"(idtr) :
@@ -59,9 +59,8 @@ void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
                 }
                 case KEY_F1: {
                     clear_screen();
-                    cursor.x_position = VGA_WIDTH/2 - 3;
-                    cursor.y_position = VGA_HEIGHT/2 - 3;
-                    cursor_set_position(VGA_WIDTH/2 - 1, VGA_HEIGHT/2 - 1);
+                    cursor.x_position = cursor.y_position = 0;
+                    cursor_set_position(cursor.x_position, cursor.y_position);
                     break;
                 }
                 case KEY_UP: {

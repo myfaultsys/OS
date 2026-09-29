@@ -1,7 +1,10 @@
 ASM = nasm
-CC = x86_64-elf-gcc
-LD =  x86_64-elf-ld
-OBJCOPY =  x86_64-elf-objcopy
+CC = gcc
+#CC = x86_64-elf-gcc
+LD = ld
+#LD = x86_64-elf-ld
+OBJCOPY = objcopy
+#OBJCOPY = x86_64-elf-objcopy
 
 ASMFLAGS = -f bin
 CFLAGS = -m32 -ffreestanding -fno-pie -fno-stack-protector -Ikernel -Ilib -Imath
@@ -33,7 +36,7 @@ build/kernel.bin: build/kernel.elf | builddir
 OS.img: build/stage1.bin build/stage2.bin build/kernel.bin | builddir
 	cat $^ > $@
 run: OS.img
-	@qemu-system-i386 -display cocoa,zoom-to-fit=on -drive format=raw,file=OS.img,if=floppy -boot a &
+	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a &
 debug: OS.img
 	@qemu-system-i386 -drive format=raw,file=OS.img,if=floppy -boot a -s -S
 clean:

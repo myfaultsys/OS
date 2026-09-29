@@ -4,6 +4,13 @@
 #define PS2_DATA_PORT   0x60
 #define PS2_STATUS_PORT 0x64
 
+#define GATE_TYPE           0b1110
+#define PRIVILEGE_LEVEL     0b00
+#define PRESENT_BIT         0b1
+#define ZERO_BIT            0b0
+
+#define GATE_FLAGS ((PRESENT_BIT << 7) | (PRIVILEGE_LEVEL << 5) | (ZERO_BIT << 4) | GATE_TYPE)
+
 typedef struct {
     u16 offset_low;
     u16 segment_selector;

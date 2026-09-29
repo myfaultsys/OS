@@ -155,19 +155,6 @@ halt:
 
 print_32:
     mov ah, 0x0a
-    mov dx, 0x3d4
-    mov al, 0x0f
-    out dx, al
-    mov dx, 0x3d5
-    mov al, 26
-    out dx, al
-    mov dx, 0x3d4
-    mov al, 0x0e
-    out dx, al
-    mov dx, 0x3d5
-    mov al, 0
-    out dx, al
-
     lodsb
     test al, al
     jz .end_print_32

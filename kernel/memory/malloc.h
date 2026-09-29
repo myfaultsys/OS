@@ -2,17 +2,26 @@
 #define H_MALLOC
 
 #include "types.h"
+#include "std.h"
+#include "memory/malloc.h"
 
-#define PAGE_SIZE 4096
+#define PAGESIZE    (u32)4096
 
-typedef struct memory_page {
-    u32 index;
-    struct memory_page *next;
-    u8 page[PAGE_SIZE];
-}__attribute__((packed)) mem_t;
+typedef struct page {
+    i32 used;
+    u8 flags;
+    struct page *next;
+    u8 buffer[PAGESIZE];
+} page_t;
+
+typedef struct {
+    void *start;
+    void *block_start;
+    void *head;
+} heap_t;
 
 u8 memcpy(void *source, void *destination, u32 size);
-mem_t *init_page(void);
-void dump_heap(void);
+void heap_init(heap_t *heap);
+void *malloc(u32 bytes);
 
 #endif

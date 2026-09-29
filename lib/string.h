@@ -11,6 +11,8 @@ typedef struct {
     u8 nullbyte;
 }__attribute__((packed)) u32_split_t;
 
-void print(u8 *text, u8 x, u8 y);
+void print(const u8 *text, u8 x, u8 y);
+void print_centered(const u8 *text, u8 height);
+void nprint(u8 *text, u32 x, u32 y, u32 count);
 
 #endif

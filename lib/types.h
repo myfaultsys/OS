@@ -41,6 +41,11 @@ typedef long long i64;
 
 extern void *KERNEL_END;
 
+typedef struct {
+    u8 x_position;
+    u8 y_position;
+} cursor_t;
+
 typedef enum {
     KEY_ESCAPE  = 0x01,
     KEY_1       = 0x02,
@@ -119,10 +124,5 @@ typedef enum {
     KEY_F11      = 0x57,
     KEY_F12      = 0x58
 } KeyboardScancode_t;
-
-typedef struct {
-    u8 x_position;
-    u8 y_position;
-} cursor_t;
 
 #endif
