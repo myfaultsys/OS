@@ -34,7 +34,7 @@ void idt_init(void) {
     );
     return;
 }
-
+extern u8 is_animation_wanted;
 void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
     switch (interrupt_vector) {
         case IRQ0: {
@@ -57,7 +57,8 @@ void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
                     reboot();
                     break;
                 }
-                case KEY_F1: {
+                case KEY_LCTL: {
+                    is_animation_wanted = 0;
                     clear_screen();
                     cursor.x_position = cursor.y_position = 0;
                     cursor_set_position(cursor.x_position, cursor.y_position);
@@ -77,7 +78,7 @@ void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
                     if (cursor.x_position == VGA_WIDTH - 1) break;
                     cursor_set_position(++cursor.x_position, cursor.y_position);
                     break;
-                }
+                } 
                 case KEY_LEFT: {
                     if (cursor.x_position == 0) break;
                     cursor_set_position(--cursor.x_position, cursor.y_position);
