@@ -6,7 +6,7 @@ void vga_ctl_set_low_byte(u8 byte);
 void vga_ctl_set_high_byte(u8 byte);
 void cursor_set_position(u8 x, u8  y);
 void clear_screen(void);
-void animation_loop(void);
+void draw_keyboard_input(u8 key);
 
 #define WHITEONBLACK    0x0f
 #define BLACK           0x00

@@ -1,7 +1,10 @@
 #include "types.h"
 #include "io.h"
+#include "std.h"
 
 volatile u8* VGA_buffer = (volatile u8*)0xb8000;
+extern ringbuffer_t ringbuffer;
+extern cursor_t cursor;
 
 void spawn_char_vga(const u8 posx, u8 posy, i8 character, u8 color) {
     volatile u8* VGA_buffer = (volatile u8*)0xb8000;
@@ -40,15 +43,10 @@ void clear_screen(void) {
     return;
 }
 
-void animation_loop(void) {
-    u32 i = 0;
-    u32 count = 50;
-    while (count) {
-        sleep(50);
-        //cursor_set_position(30 + i % 10, 12 + i % 5);
-        spawn_char_vga(30 + i % 10, 12 + i % 5, (i + '0') % 32, ((20 + i) % 50)&0x0f);
-        i++;
-        count--;
-    }
+void draw_keyboard_input(u8 key) {
+    spawn_char_vga(cursor.x_position++ % VGA_WIDTH, cursor.y_position % VGA_HEIGHT, key, WHITEONBLACK);
+    if (cursor.x_position == VGA_WIDTH) { cursor.x_position = 0; cursor.y_position++; }
+    if (cursor.y_position == VGA_HEIGHT) { cursor.y_position = 0; }
+    cursor_set_position(cursor.x_position % VGA_WIDTH, cursor.y_position % VGA_HEIGHT);
     return;
 }

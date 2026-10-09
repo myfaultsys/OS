@@ -46,7 +46,7 @@ void *allocate_pages(u32 count) {
         ptr = allocate_single_page(&heapmap);
     }
     (&heapmap)->block_start = heap_start;
-    for (u32 i = 0; i < page_buffer_count + 1; i++) {
+    for (u32 i = 1; i < page_buffer_count + 1; i++) {
         ((&heapmap)->block_start + i)->index = ((&heapmap)->block_start + i - 1)->index + 1;
         ((&heapmap)->block_start + i)->previous = ((&heapmap)->block_start + i -1);
         ((&heapmap)->block_start + i)->next = ((&heapmap)->block_start + i +1);
@@ -58,6 +58,6 @@ void *free_pages(u32 count) {
     void *ptr;
     for (u32 i = 0; i < count; i++) {
         ptr = free_single_page(&heapmap);
-    }
+    }  
     return ptr;
 }

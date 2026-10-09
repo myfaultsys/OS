@@ -31,11 +31,5 @@ void *allocate_single_page(heapmap_t *heapmap);
 void *free_single_page(heapmap_t *heapmap);
 void *allocate_pages(u32 count);
 void *free_pages(u32 count);
-/*
-void heap_init(heapmap_t *heapmap);
-page_t *create_page(heapmap_t *heapmap);
-void *malloc(u8 bytes);
-void free (void *heap);
-*/
 
 #endif
