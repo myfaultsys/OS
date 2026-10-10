@@ -1,5 +1,6 @@
 #include "types.h"
 #include "io.h"
+#include "memory/malloc.h"
 
 void outb(u16 port, u8 value) {
     __asm__ volatile (
@@ -45,4 +46,15 @@ void reboot(void) {
 
 void halt(void) {
     __asm__ volatile ("hlt");
+}
+
+u32 *get_cpu_id(void) {
+    u32 maxnum;
+    u32 *ptr = allocate_pages(1);
+   __asm__ __volatile__(
+        "cpuid"
+        : "=b"(ptr[0]), "=d"(ptr[1]), "=c"(ptr[2]), "=a"(maxnum)
+        : "a"(0)
+    );
+    return ptr;
 }

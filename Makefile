@@ -7,7 +7,7 @@ OBJCOPY = objcopy
 #OBJCOPY = x86_64-elf-objcopy
 
 ASMFLAGS = -f bin
-CFLAGS = -m32 -ffreestanding -fno-pie -fno-stack-protector -Ikernel -Ilib -Imath
+CFLAGS = -Wall -Wextra -Werror -m32 -ffreestanding -fno-pie -fno-stack-protector -Ikernel -Ilib -Imath
 LDFLAGS = -m elf_i386 -T linker.ld
 
 all: OS.img

@@ -14,5 +14,6 @@ void pit_init(u32 frequency);
 void sleep(u32 count);
 void reboot(void);
 void halt(void);
+u32 *get_cpu_id(void);
 
 #endif

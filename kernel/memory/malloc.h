@@ -24,7 +24,7 @@ typedef struct {
     page_t *end;
 } heapmap_t;
 
-void memcpy(void *source, void *destination, u32 size);
+void memcpy(const void *source, void *destination, u32 size);
 void memset(void *address, u8 byte, u32 count);
 void *heapmap_init(heapmap_t *heapmap);
 void *allocate_single_page(heapmap_t *heapmap);

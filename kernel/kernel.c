@@ -10,7 +10,6 @@ cursor_t cursor;
 heapmap_t heapmap;
 ringbuffer_t ringbuffer;
 
-const u8 heaptest[] = "This string is stored in heap memory!";
 
 void kernel(void) {
     u32 last_key = ringbuffer.end;
@@ -25,10 +24,8 @@ void kernel(void) {
     ringbuffer_init(&ringbuffer);
     start_interrupts();
 
-    page_t *pHeap = allocate_pages(1);
-    memcpy(heaptest, pHeap->buffer, sizeof(heaptest));
-    print_centered(pHeap->buffer, 23);
-
+    print_centered((u8*)get_cpu_id(), VGA_HEIGHT/2);
+    
     while (1) {
         halt();
         stop_interrupts();
@@ -38,6 +35,6 @@ void kernel(void) {
             handle_character(key);
             last_key = ringbuffer.end;
         }
-        print_centered(ringbuffer.buffer, 24);
+        print_centered(ringbuffer.buffer, 22);
     }
 }

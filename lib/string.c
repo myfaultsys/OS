@@ -6,7 +6,7 @@ extern cursor_t cursor;
 
 void print(const u8 *text, u8 x, u8 y) {
     u32 offset = 0;
-    for (;;) {
+    while (1) {
         if (*text == '\0') break;
         if (cursor.x_position == VGA_WIDTH - 1 && cursor.y_position == VGA_HEIGHT - 1) { cursor.x_position = cursor.y_position = 0;} 
         if (cursor.x_position == VGA_WIDTH - 1) { cursor.x_position = 0, cursor.y_position++;}
@@ -17,13 +17,20 @@ void print(const u8 *text, u8 x, u8 y) {
 
 void print_centered(const u8 *text, u8 height) {
     u16 length = 0;
-    u8 *ptr = text;
+    const u8 *ptr = text;
     while (*(ptr++) != '\0' && length <= VGA_WIDTH*VGA_HEIGHT) {
         length++;
     }
-    if (length > VGA_WIDTH) return;
-    u8 x_offset = (VGA_WIDTH - length) / 2;
-    print(text, x_offset, height);
+    u8 x_offset;
+    if (length >= VGA_WIDTH) {
+        length = 0;
+        height = (height + 1) % VGA_HEIGHT;
+        x_offset = (VGA_WIDTH - length) / 2;
+        print(text, x_offset, height);
+    } else {
+        x_offset = (VGA_WIDTH - length) / 2;
+        print(text, x_offset, height);
+    }
     return;
 }
 

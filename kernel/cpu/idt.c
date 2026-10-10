@@ -39,6 +39,7 @@ void idt_init(void) {
 }
 
 void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
+    (void)error_code;
     switch (interrupt_vector) {
         case IRQ0: {
             ticks++;

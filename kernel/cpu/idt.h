@@ -24,12 +24,18 @@ typedef struct {
     u64 base;
 }__attribute__((packed)) IDTR_t;
 
+
+typedef enum {
+    IRQ0 = 0x20,
+    IRQ1 = 0x21
+} interrupt_t;
+
 extern volatile u32 ticks;
 extern u8 GDT_code_segment_offset;
 
 void IDT_set_gate(InterruptDescriptor_t *IDT, u16 interrupt_vector, u32 offset, u16 segment, u8 flags);
 void idt_init(void);
-void interrupt_handler(u32 interrupt_vector, u32 error_code);
+void interrupt_handler(interrupt_t interrupt_vector, u32 error_code);
 void pic_EOI(u8 irq);
 void pic_remap(u8 master_offset, u8 slave_offset);
 void PIC_disable(void);
@@ -39,11 +45,6 @@ u16 PIC_get_IRR(void);
 u16 PIC_get_ISR(void);
 void start_interrupts(void);
 void stop_interrupts(void);
-
-typedef enum {
-    IRQ0 = 0x20,
-    IRQ1 = 0x21
-} interrupt_t;
 
 enum { GDT_CODE_SEGMENT_OFFSET = 0x08 };
 

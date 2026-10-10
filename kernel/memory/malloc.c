@@ -5,7 +5,7 @@
 
 extern heapmap_t heapmap;
 
-void memcpy(void *source, void *destination, u32 size) {
+void memcpy(const void *source, void *destination, u32 size) {
     for (u32 i = 0; i < size; i++) {
         *(u8*)(destination + i) = *(u8*)(source + i);
     }
@@ -39,12 +39,14 @@ void *free_single_page(heapmap_t *heapmap) {
 }
 
 void *allocate_pages(u32 count) {
-    void *ptr;
+    //void *ptr;
     page_t *heap_start = (&heapmap)->end + 1;
     u32 page_buffer_count = ALIGN(count)/PAGEBUFFERSIZE;
+    /*
     for (u32 i = 0; i < page_buffer_count ; i++) {
         ptr = allocate_single_page(&heapmap);
     }
+    */
     (&heapmap)->block_start = heap_start;
     for (u32 i = 1; i < page_buffer_count + 1; i++) {
         ((&heapmap)->block_start + i)->index = ((&heapmap)->block_start + i - 1)->index + 1;

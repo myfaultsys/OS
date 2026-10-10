@@ -6,8 +6,8 @@
 #define RINGBUFFERSIZE (VGA_WIDTH*2)
 
 typedef struct {
-    u8 start;
-    u8 end;
+    u32 start;
+    u32 end;
     u8 buffer[RINGBUFFERSIZE];
 } ringbuffer_t;
 
