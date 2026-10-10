@@ -38,6 +38,6 @@ void kernel(void) {
             handle_character(key);
             last_key = ringbuffer.end;
         }
-        print_centered(ringbuffer.buffer, 23);
+        print_centered(ringbuffer.buffer, 24);
     }
 }

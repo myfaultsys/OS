@@ -47,7 +47,7 @@ void interrupt_handler(interrupt_t interrupt_vector, u32 error_code) {
         case IRQ1: {
             KeyboardScancode_t key = inb(PS2_DATA_PORT);
             if (!(key & KEY_RELEASED_BIT)) {
-                ringbuffer_push(&ringbuffer, scancode_to_ascii[key]);
+                ringbuffer_push(&ringbuffer, key);
             }
             break;
         }

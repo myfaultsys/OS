@@ -32,6 +32,13 @@ This is a 32-bit monolithic x86 operating system kernel built from scratch in C 
 4.   Possibly Switch Build Tools In Makefile
 5.  `make clean && make && make run`
 
+## Controls
+*   arrow keys: move cursor
+*   ctl:        clear screen
+*   f1:          reboot
+*   tab: tab
+*   enter: enter
+
 ## Future Plans
 *   Virtual Memory & Paging
 *   A Shell

@@ -1,6 +1,7 @@
 #include "types.h"
 #include "std.h"
 #include "drivers/io.h"
+#include "cpu/idt.h"
 
 extern cursor_t cursor;
 
@@ -37,7 +38,7 @@ u8 read_ringbuffer_end(ringbuffer_t *ringbuffer) {
 }
 
 void handle_character(u8 key) {
-    if (key == KEY_UP || key == KEY_DOWN || key == KEY_LEFT || key == KEY_RIGHT || key == KEY_ESCAPE || key == KEY_LCTL || key == KEY_APOST) {
+    if (key == KEY_UP || key == KEY_DOWN || key == KEY_LEFT || key == KEY_RIGHT || key == KEY_ESCAPE || key == KEY_LCTL || key == KEY_BACK || key == KEY_ENTER || key == KEY_TAB) {
         switch(key) {
             case KEY_ESCAPE: {
                 reboot();
@@ -76,11 +77,28 @@ void handle_character(u8 key) {
                 spawn_char_vga(cursor.x_position, cursor.y_position, ' ', BLACK);
                 break;
             }
+            case KEY_ENTER: {
+                if (cursor.y_position == VGA_HEIGHT - 1) {cursor.x_position = 0; cursor.y_position = 0;}
+                else {cursor.x_position = 0; cursor.y_position++;}
+                cursor_set_position(cursor.x_position, cursor.y_position);
+                break;
+            }
+            case KEY_TAB: {
+                if (cursor.x_position >= VGA_WIDTH - 4) { 
+                    cursor.x_position = 0;
+                    cursor.y_position = (cursor.y_position + 1) % VGA_HEIGHT;
+                    cursor_set_position(cursor.x_position, cursor.y_position); 
+                } else {
+                cursor.x_position += 4;
+                cursor_set_position(cursor.x_position % VGA_WIDTH, cursor.y_position % VGA_HEIGHT);
+                }
+                break;
+            }
             default:
                 break;
         }
     } else {
-        draw_keyboard_input(key);
+        draw_keyboard_input(scancode_to_ascii[key]);
     }
     return;
 }
